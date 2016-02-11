@@ -1,0 +1,90 @@
+<?xml version='1.0'?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xmlns="urn:activemq"
+               xsi:schemaLocation="urn:activemq /schema/artemis-server.xsd">
+    <!-- Create DLQ and ExpiryQuue on Startup -->
+    <jms xmlns="urn:activemq:jms">
+        <queue name="DLQ"/>
+        <queue name="ExpiryQueue"/>
+    </jms>
+    <core xmlns="urn:activemq:core">
+        <name>broker2</name>
+        <persistence-enabled>true</persistence-enabled>
+        <!-- this could be ASYNCIO or NIO -->
+        <journal-type>NIO</journal-type>
+        <bindings-directory>./artemis-data/bindings</bindings-directory>
+        <journal-directory>./artemis-data/journal</journal-directory>
+        <large-messages-directory>./artemis-data/largemessages</large-messages-directory>
+        <paging-directory>./artemis-data/paging</paging-directory>
+
+        <!-- Acceptors -->
+        <acceptors>
+            <acceptor name="netty-acceptor">tcp://localhost:61617?protocols=CORE,AMQP</acceptor>
+        </acceptors>
+        <!-- Cluster username and password should match on all masters and slaves -->
+        <cluster-user>user</cluster-user>
+        <cluster-password>password</cluster-password>
+        <!-- Complete list of options https://activemq.apache.org/artemis/docs/1.2.0/clusters.html#Configuring Cluster Connections -->
+        <cluster-connections>
+            <cluster-connection name="mycluster">
+                <!-- Each cluster connection only applies to addresses that match the specified address field. All JMS related objects
+                     start with jms. on core server -->
+                <address>jms</address>
+                <!-- Connector which will be sent to other nodes in the cluster so they have the correct cluster topology.
+                     This parameter is mandatory. -->
+                <connector-ref>netty-connector</connector-ref>
+                <!-- Default retry is done after 500ms and then it is slowed down.  Note that it is infinite retries with this config -->
+                <retry-interval-multiplier>2</retry-interval-multiplier>
+                <static-connectors allow-direct-connections-only="true" >
+                    <connector-ref>netty-backup-connector</connector-ref>
+                </static-connectors>
+            </cluster-connection>
+        </cluster-connections>
+
+        <!-- Other config -->
+
+        <security-settings>
+            <!--security for example queue-->
+            <security-setting match="jms.queue.#">
+                <permission type="createDurableQueue" roles="guest"/>
+                <permission type="deleteDurableQueue" roles="guest"/>
+                <permission type="createNonDurableQueue" roles="guest"/>
+                <permission type="deleteNonDurableQueue" roles="guest"/>
+                <permission type="consume" roles="guest"/>
+                <permission type="send" roles="guest"/>
+            </security-setting>
+            <!-- security settings for JMS temporary queue -->
+            <security-setting match="jms.tempqueue.#">
+                <permission type="createNonDurableQueue" roles="guest"/>
+                <permission type="deleteNonDurableQueue" roles="guest"/>
+                <permission type="consume" roles="guest"/>
+                <permission type="send" roles="guest"/>
+            </security-setting>
+        </security-settings>
+
+        <address-settings>
+            <!--default for catch all-->
+            <address-setting match="#">
+                <dead-letter-address>jms.queue.DLQ</dead-letter-address>
+                <expiry-address>jms.queue.ExpiryQueue</expiry-address>
+                <redelivery-delay>0</redelivery-delay>
+                <max-size-bytes>10485760</max-size-bytes>
+                <message-counter-history-day-limit>10</message-counter-history-day-limit>
+                <address-full-policy>BLOCK</address-full-policy>
+            </address-setting>
+        </address-settings>
+        <ha-policy>
+            <replication>
+                <slave>
+                    <allow-failback>true</allow-failback>
+                    <!-- not needed but tells the backup not to restart after failback as there will be > 0 backups saved -->
+                    <max-saved-replicated-journals-size>0</max-saved-replicated-journals-size>
+                </slave>
+            </replication>
+        </ha-policy>
+        <connectors>
+            <connector name="netty-connector">tcp://localhost:61617?protocols=CORE,AMQP</connector>
+            <connector name="netty-backup-connector">tcp://amq01-dev:61616?protocols=CORE,AMQP</connector>
+        </connectors>
+    </core>
+</configuration>
