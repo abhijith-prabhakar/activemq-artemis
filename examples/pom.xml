@@ -97,6 +97,7 @@ under the License.
    <modules>
       <module>features</module>
       <module>protocols</module>
+      <module>bugs</module>
    </modules>
 
 </project>
