@@ -36,7 +36,7 @@
                 <!-- Default retry is done after 500ms and then it is slowed down.  Note that it is infinite retries with this config -->
                 <retry-interval-multiplier>2</retry-interval-multiplier>
                 <static-connectors allow-direct-connections-only="true" >
-                    <connector-ref>netty-backup-connector</connector-ref>
+                    <connector-ref>netty-live-connector</connector-ref>
                 </static-connectors>
             </cluster-connection>
         </cluster-connections>

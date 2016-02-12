@@ -83,8 +83,8 @@
             </replication>
         </ha-policy>
         <connectors>
-            <connector name="netty-connector">tcp://localhost:61616?protocols=CORE,AMQP</connector>
-            <connector name="netty-backup-connector">tcp://localhost:61617?protocols=CORE,AMQP</connector>
+            <connector name="netty-connector">tcp://localhost:61616</connector>
+            <connector name="netty-backup-connector">tcp://localhost:61617</connector>
         </connectors>
     </core>
 </configuration>
