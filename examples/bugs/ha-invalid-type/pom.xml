@@ -12,7 +12,7 @@
     <artifactId>ha-invalid-type</artifactId>
 
     <properties>
-        <activemq.basedir>/Users/abprabhakar/tools/apache-artemis-1.2.0</activemq.basedir>
+        <activemq.basedir>${project.basedir}/../../..</activemq.basedir>
     </properties>
 
     <dependencies>
