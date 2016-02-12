@@ -34,7 +34,7 @@ public class ReplicatedFailbackStaticExample {
 
         try {
             server0 = ServerUtil.startServer(args[0], ReplicatedFailbackStaticExample.class.getSimpleName() + "0", 0, 30000);
-            server1 = ServerUtil.startServer(args[1], ReplicatedFailbackStaticExample.class.getSimpleName() + "1", 1, 30000);
+            server1 = ServerUtil.startServer(args[1], ReplicatedFailbackStaticExample.class.getSimpleName() + "1", 1, 10000);
 
 
             HashMap<String, Object> map = new HashMap<String, Object>();

@@ -13,6 +13,7 @@
 
     <properties>
         <activemq.basedir>${project.basedir}/../../..</activemq.basedir>
+        <!--<activemq.basedir>/Users/abprabhakar/tools/apache-artemis-1.2.0</activemq.basedir>-->
     </properties>
 
     <dependencies>
@@ -25,6 +26,11 @@
             <groupId>org.apache.activemq</groupId>
             <artifactId>artemis-jms-client</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.logmanager</groupId>
+            <artifactId>jboss-logmanager</artifactId>
+            <version>1.5.3.Final</version>
         </dependency>
     </dependencies>
 
@@ -53,9 +59,10 @@
                         </goals>
                         <configuration>
                             <!-- this makes it easier in certain envs -->
-                            <javaOptions>-Djava.net.preferIPv4Stack=true</javaOptions>
+                            <javaOptions>-Djava.net.preferIPv4Stack=true </javaOptions>
                             <instance>${basedir}/target/server1</instance>
                             <configuration>${basedir}/target/classes/activemq/server1</configuration>
+
                         </configuration>
                     </execution>
                     <execution>
@@ -69,6 +76,7 @@
                                 <param>${basedir}/target/server0</param>
                                 <param>${basedir}/target/server1</param>
                             </args>
+
                         </configuration>
                     </execution>
                 </executions>

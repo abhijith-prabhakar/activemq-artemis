@@ -32,7 +32,7 @@
         </acceptors>
         <connectors>
             <connector name="netty-connector">tcp://localhost:61617</connector>
-            <connector name="netty-live-connector">tcp://amq01-dev:61616</connector>
+            <connector name="netty-live-connector">tcp://localhost:61616</connector>
         </connectors>
         <!-- Cluster username and password should match on all masters and slaves -->
         <cluster-user>user</cluster-user>
